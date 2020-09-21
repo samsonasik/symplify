@@ -91,7 +91,7 @@ final class StandardizeHereNowDocKeywordFixer extends AbstractSymplifyFixer impl
         $newContent = Strings::replace(
             $token->getContent(),
             self::START_HEREDOC_NOWDOC_NAME_REGEX,
-            '$1' . trim($this->keyword) . '$4'
+            '$1' . $this->keyword . '$4'
         );
 
         $tokens[$position] = new Token([$token->getId(), $newContent]);
@@ -112,5 +112,6 @@ final class StandardizeHereNowDocKeywordFixer extends AbstractSymplifyFixer impl
 
         $this->keyword = $this->spaceEnd . $this->keyword;
         $tokens[$position] = new Token([$token->getId(), $this->keyword]);
+        $this->keyword = trim($this->keyword);
     }
 }
