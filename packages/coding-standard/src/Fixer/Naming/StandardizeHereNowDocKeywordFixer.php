@@ -42,9 +42,9 @@ final class StandardizeHereNowDocKeywordFixer extends AbstractSymplifyFixer impl
     private $keyword = self::DEFAULT_KEYWORD;
 
     /**
-     * @var int
+     * @var string
      */
-    private $spaceEnd = 0;
+    private $spaceEnd = '';
 
     public function getDefinition(): FixerDefinitionInterface
     {
@@ -103,17 +103,14 @@ final class StandardizeHereNowDocKeywordFixer extends AbstractSymplifyFixer impl
         $trimmedTokenContent = trim($tokenContent);
 
         if (version_compare(PHP_VERSION, '7.3', '>=') && $tokenContent !== $trimmedTokenContent) {
-            $this->spaceEnd = strlen($tokenContent) - strlen($trimmedTokenContent);
+            $this->spaceEnd = substr($tokenContent, 0, strlen($tokenContent) - strlen($trimmedTokenContent));
         }
 
         if ($token->getContent() === $this->keyword) {
             return;
         }
 
-        if ($this->spaceEnd > 0) {
-            $this->keyword = str_repeat(' ', $this->spaceEnd) . $this->keyword;
-        }
-
+        $this->keyword = $this->spaceEnd . $this->keyword;
         $tokens[$position] = new Token([$token->getId(), $this->keyword]);
     }
 }
